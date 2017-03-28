@@ -4,7 +4,7 @@ module Wechat
 
     module ClassMethods
       attr_accessor :wechat_api_client, :wechat_cfg_account, :token, :appid, :corpid, :agentid, :encrypt_mode, :timeout,
-                    :skip_verify_ssl, :encoding_aes_key, :trusted_domain_fullname, :oauth2_cookie_duration
+                    :skip_verify_ssl, :encoding_aes_key, :trusted_domain_fullname, :oauth2_cookie_duration, :auth_url
     end
 
     def wechat
@@ -75,7 +75,8 @@ module Wechat
       if oauth2_params[:scope] == 'snsapi_login'
         "https://open.weixin.qq.com/connect/qrconnect?#{oauth2_params.to_query}#wechat_redirect"
       else
-        "https://open.weixin.qq.com/connect/oauth2/authorize?#{oauth2_params.to_query}#wechat_redirect"
+        url = self.class.auth_url || 'https://open.weixin.qq.com/connect/oauth2/authorize'
+        "#{url}?#{oauth2_params.to_query}#wechat_redirect"
       end
     end
   end
